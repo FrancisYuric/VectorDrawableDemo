@@ -16,4 +16,12 @@ public class MainActivity extends AppCompatActivity {
     public void secondBezierTest(View view) {
         startActivity(new Intent(this, SecondBezierActivity.class));
     }
+
+    public void thirdBezierTest(View view) {
+        startActivity(new Intent(this, ThirdBezierActivity.class));
+    }
+
+    public void drawPadBezierTest(View view) {
+        startActivity(new Intent(this, DrawPadActivity.class));
+    }
 }

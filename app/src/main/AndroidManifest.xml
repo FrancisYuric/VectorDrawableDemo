@@ -16,7 +16,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SecondBezierActivity"></activity>
+        <activity android:name=".SecondBezierActivity" />
+        <activity android:name=".ThirdBezierActivity" />
+        <activity android:name=".DrawPadActivity"></activity>
     </application>
 
 </manifest>

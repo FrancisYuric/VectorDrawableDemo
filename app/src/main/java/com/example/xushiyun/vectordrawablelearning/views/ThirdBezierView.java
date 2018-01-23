@@ -17,9 +17,8 @@ import android.view.View;
  * Descripetion: Todo
  */
 
-public class SecondBezierView extends View {
+public class ThirdBezierView extends View {
     //首先确定起点和终点的坐标
-    //高阶Bezier曲线都可以通过二三阶曲线进行绘制
 
     private float mStartPointX;
     private float mStartPointY;
@@ -27,8 +26,11 @@ public class SecondBezierView extends View {
     private float mEndPointX;
     private float mEndPointY;
 
-    private float mFlagPointX;
-    private float mFlagPointY;
+    //二阶和三阶的区别是有几个中间点的区别,中间点的个数
+    private float mFlagPoint1X;
+    private float mFlagPoint1Y;
+    private float mFlagPoint2X;
+    private float mFlagPoint2Y;
 
     private Path mPath;
 
@@ -38,11 +40,14 @@ public class SecondBezierView extends View {
     //问文字画笔
     private Paint mPaintFlagText;
 
-    public SecondBezierView(Context context) {
+    //标记是否触发多点触控
+    private boolean isSecondPoint = false;
+
+    public ThirdBezierView(Context context) {
         super(context);
     }
 
-    public SecondBezierView(Context context, @Nullable AttributeSet attrs) {
+    public ThirdBezierView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         //在构造方法中对pen进行初始化
         mPaintBezier = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -58,7 +63,7 @@ public class SecondBezierView extends View {
         mPaintFlagText.setTextSize(20);
     }
 
-    public SecondBezierView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public ThirdBezierView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
@@ -71,8 +76,10 @@ public class SecondBezierView extends View {
         mEndPointX = w * 3 / 4;
         mEndPointY = h / 2 - 200;
 
-        mFlagPointX = w / 2;
-        mFlagPointY = h / 2 - 300;
+        mFlagPoint1X = w / 2 - 100;
+        mFlagPoint1Y = h / 2 - 300;
+        mFlagPoint2X = w / 2 + 100;
+        mFlagPoint2Y = h / 2 - 300;
 
         //然后通过android的bezier曲线绘制api绘制相应的曲线
 
@@ -86,14 +93,21 @@ public class SecondBezierView extends View {
         mPath.moveTo(mStartPointX, mStartPointY);
         //quad和rquad区别是前者是绝对坐标,后者是相对坐标,这里选择绝对坐标的方式来绘制
         //前者是控制点坐标,后者是终点坐标
-        mPath.quadTo(mFlagPointX, mFlagPointY, mEndPointX, mEndPointY);
+//        mPath.quadTo(mFlagPoint1X, mFlagPoint1Y, mEndPointX, mEndPointY);
+//        cubicTo同样有相对和绝对两个表示方式
+        mPath.cubicTo(mFlagPoint1X, mFlagPoint1Y, mFlagPoint2X, mFlagPoint2Y, mEndPointX, mEndPointY);
+
         canvas.drawPoint(mStartPointX, mStartPointY, mPaintFlag);
         canvas.drawText("起点", mStartPointX, mStartPointY, mPaintFlagText);
-        canvas.drawPoint(mFlagPointX, mFlagPointY, mPaintFlag);
-        canvas.drawText("控制点", mFlagPointX, mFlagPointY, mPaintFlagText);
+        canvas.drawPoint(mFlagPoint1X, mFlagPoint1Y, mPaintFlag);
+        canvas.drawText("控制点1", mFlagPoint1X, mFlagPoint1Y, mPaintFlagText);
+        canvas.drawText("控制点2", mFlagPoint2X, mFlagPoint2Y, mPaintFlagText);
         canvas.drawPoint(mEndPointX, mEndPointY, mPaintFlag);
         canvas.drawText("终点", mEndPointX, mEndPointY, mPaintFlagText);
-        canvas.drawLine(mStartPointX, mStartPointY, mFlagPointX, mFlagPointY, mPaintFlag);
+        //绘制相关点之间的连线
+        canvas.drawLine(mStartPointX, mStartPointY, mFlagPoint1X, mFlagPoint1Y, mPaintFlag);
+        canvas.drawLine(mFlagPoint1X, mFlagPoint1Y, mFlagPoint2X, mFlagPoint2Y, mPaintFlag);
+        canvas.drawLine(mFlagPoint2X, mFlagPoint2Y, mEndPointX, mEndPointY, mPaintFlag);
 
         canvas.drawPath(mPath, mPaintBezier);
 
@@ -101,10 +115,21 @@ public class SecondBezierView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        switch (event.getAction()) {
+        switch (event.getAction() & MotionEvent.ACTION_MASK) {
+            //测定是否按下第二个手指
+            case MotionEvent.ACTION_POINTER_DOWN:
+                isSecondPoint = true;
+                break;
+            case MotionEvent.ACTION_POINTER_UP:
+                isSecondPoint = false;
+                break;
             case MotionEvent.ACTION_MOVE:
-                mFlagPointX = event.getX();
-                mFlagPointY = event.getY();
+                mFlagPoint1X = event.getX(0);
+                mFlagPoint1Y = event.getY();
+                if(isSecondPoint) {
+                    mFlagPoint2X = event.getX(1);
+                    mFlagPoint2Y = event.getY(1);
+                }
                 invalidate();
                 break;
         }
