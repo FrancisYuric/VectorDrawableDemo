@@ -24,4 +24,9 @@ public class MainActivity extends AppCompatActivity {
     public void drawPadBezierTest(View view) {
         startActivity(new Intent(this, DrawPadActivity.class));
     }
+
+    //路径变换动画变化效果
+    public void pathMorthingBezierTest(View view) {
+        startActivity(new Intent(this, PathMorthingActivity.class));
+    }
 }

@@ -18,7 +18,8 @@
         </activity>
         <activity android:name=".SecondBezierActivity" />
         <activity android:name=".ThirdBezierActivity" />
-        <activity android:name=".DrawPadActivity"></activity>
+        <activity android:name=".DrawPadActivity" />
+        <activity android:name=".PathMorthingActivity"></activity>
     </application>
 
 </manifest>
