@@ -19,7 +19,9 @@
         <activity android:name=".SecondBezierActivity" />
         <activity android:name=".ThirdBezierActivity" />
         <activity android:name=".DrawPadActivity" />
-        <activity android:name=".PathMorthingActivity"></activity>
+        <activity android:name=".PathMorthingActivity" />
+        <activity android:name=".WaveActivity" />
+        <activity android:name=".PathBezierActivity"></activity>
     </application>
 
 </manifest>
