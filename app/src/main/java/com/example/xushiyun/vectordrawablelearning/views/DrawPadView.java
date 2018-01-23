@@ -53,7 +53,12 @@ public class DrawPadView extends View {
             case MotionEvent.ACTION_MOVE:
                 float x1 = event.getX();
                 float y1 = event.getY();
-                mPath.lineTo(x1, y1);
+                //使用lineto会产生棱角,可以通过Bezier曲线来进行对应的优化操作,关键的问题是怎么寻找对应的三个关键点的选取问题
+//                mPath.lineTo(x1, y1);
+                //一般选取2点的中点来构成关键三个点
+                float cx = (x1 + mX) / 2;
+                float cy = (y1 + mY) / 2;
+                mPath.quadTo(mX, mY, cx, cy);
                 mX = x1;
                 mY = y1;
                 break;
